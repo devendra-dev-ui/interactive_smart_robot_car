@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Interactive Smart Robot Car and Sensor Monitoring System</title>
+<style>
+:root{--bg:#0b1220;--p:#111a2e;--p2:#16223a;--b:#24334f;--t:#e6edf7;--m:#8a9bb8;--ac:#3b82f6;--g:#22c55e;--y:#eab308;--r:#ef4444;--x:#64748b;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:14px/1.5 system-ui,"Segoe UI",Roboto,sans-serif;display:flex;min-height:100vh}
+aside{width:230px;background:var(--p);border-right:1px solid var(--b);padding:18px 12px;position:sticky;top:0;height:100vh;flex:none;display:flex;flex-direction:column;gap:10px}
+aside h1{font-size:17px;margin:0 6px}aside small{display:block;color:var(--m);font-weight:400;font-size:11px}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--m);padding:9px 12px;border-radius:8px;cursor:pointer;font:inherit;transition:.2s}
+nav button.on,nav button:hover{background:var(--p2);color:var(--t)}nav button.on{box-shadow:inset 3px 0 var(--ac)}
+.note{color:var(--m);font-size:11px;margin:auto 6px 0}
+main{flex:1;min-width:0;padding:22px}
+section{display:none;max-width:1120px;margin:auto}section.on{display:block;animation:f .3s}
+@keyframes f{from{opacity:0;transform:translateY(6px)}}
+h2{margin:0 0 4px;font-size:22px}h3{margin:14px 0 6px;font-size:15px}.sub{color:var(--m);margin:0 0 16px}
+.card{background:var(--p);border:1px solid var(--b);border-radius:12px;padding:14px}
+.g{display:grid;gap:14px}.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.g5{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+canvas{width:100%;height:auto;display:block;background:#0d1627;border-radius:8px;touch-action:none}
+button.b{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;transition:.15s}button.b:hover{filter:brightness(1.2)}
+button.b.s{background:var(--p2);border:1px solid var(--b)}button.b.d{background:#b91c1c}
+input[type=range]{width:100%}label{display:block;color:var(--m);font-size:12px;margin:8px 0 2px}
+input[type=number]{background:var(--p2);border:1px solid var(--b);color:var(--t);border-radius:6px;padding:5px;width:80px}
+.big{font-size:24px;font-weight:700}.bd{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600}
+.bd.ok{background:#14532d;color:#86efac}.bd.wn{background:#713f12;color:#fde047}.bd.rd{background:#7f1d1d;color:#fca5a5}.bd.xx{background:#334155;color:#cbd5e1}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;background:var(--x)}.dot.ok{background:var(--g);box-shadow:0 0 8px var(--g)}.dot.wn{background:var(--y);box-shadow:0 0 8px var(--y)}.dot.rd{background:var(--r);box-shadow:0 0 8px var(--r)}
+.rem{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:260px}.rem button{min-height:44px}
+.log{max-height:170px;overflow:auto;font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--m)}
+.arch{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.arch span{background:var(--p2);border:1px solid var(--b);border-radius:8px;padding:8px 12px}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;align-items:center;background:linear-gradient(135deg,#0f1c38,#111a2e);border:1px solid var(--b);border-radius:16px;padding:22px;margin-bottom:14px}
+.hero h2{font-size:30px;line-height:1.2}.shake{animation:sh .08s infinite}@keyframes sh{50%{transform:translateX(4px)}}
+.led{width:18px;height:18px;border-radius:50%;background:var(--x);display:inline-block;vertical-align:middle}.led.on{background:var(--r);box-shadow:0 0 14px var(--r)}
+ul{margin:4px 0;padding-left:20px}small{color:var(--m)}
+@media(max-width:800px){body{flex-direction:column}aside{width:auto;height:auto;position:static}nav{display:flex;overflow-x:auto}nav button{white-space:nowrap}}
+</style></head><body>
+<aside><h1>RoboLab<small>Smart Car Simulator</small></h1><nav id="nav"></nav><p class="note">All readings are SIMULATED in JavaScript. Not connected to physical Arduino hardware.</p></aside>
+<main>
+<section id="intro">
+<div class="hero"><div><h2>Interactive Smart Robot Car and Sensor Monitoring System</h2><p class="sub">An educational browser simulation of five embedded sensors, tested individually and then integrated into one autonomous robot car.</p><button class="b" onclick="show('us')">Start sensor testing →</button> <button class="b s" onclick="show('sim')">Jump to robot car</button></div>
+<svg viewBox="0 0 520 250"><defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#1e3a8a"/></linearGradient></defs>
+<ellipse cx="260" cy="215" rx="210" ry="16" fill="#000" opacity=".4"/><rect x="80" y="110" width="360" height="85" rx="22" fill="url(#gb)" stroke="#93c5fd"/><rect x="170" y="68" width="180" height="55" rx="16" fill="#1d4ed8" stroke="#93c5fd"/><rect x="190" y="80" width="140" height="30" rx="8" fill="#0ea5e9" opacity=".5"/>
+<g fill="#0f172a" stroke="#475569" stroke-width="5"><circle cx="150" cy="198" r="32"/><circle cx="370" cy="198" r="32"/></g><g fill="#475569"><circle cx="150" cy="198" r="12"/><circle cx="370" cy="198" r="12"/></g>
+<circle cx="440" cy="135" r="13" fill="#e2e8f0"/><circle cx="440" cy="165" r="13" fill="#e2e8f0"/><circle cx="300" cy="62" r="7" fill="#f87171"/><rect x="215" y="48" width="26" height="18" rx="3" fill="#38bdf8"/><rect x="250" y="140" width="22" height="16" fill="#facc15"/><circle cx="130" cy="140" r="8" fill="#a78bfa"/>
+<g fill="#cbd5e1" font-size="12"><text x="400" y="110">HC-SR04</text><text x="280" y="42">IR RX</text><text x="190" y="40">DHT11</text><text x="238" y="176">VIBRATION</text><text x="96" y="124">TILT</text></g></svg></div>
+<div class="g g2"><div class="card"><h3>Introduction</h3><p>Robots perceive their surroundings through sensors. This project demonstrates the working principle of five low-cost sensors common in Arduino-based robot cars, then combines them in a 2D simulated environment.</p><h3>Problem statement</h3><p>A mobile robot must avoid obstacles, monitor its environment, accept remote commands, and detect rough or unstable terrain. Testing each sensor alone and then together shows how their data fuse into safe behaviour.</p><h3>Objectives</h3><ul><li>Understand each sensor's working principle through interaction</li><li>Compute every reading from simulated physical state</li><li>Integrate all sensors into one obstacle-avoiding robot</li></ul></div>
+<div class="card"><h3>The five sensors</h3><ol><li>HC-SR04 ultrasonic sensor — distance by echo time</li><li>DHT11 — temperature and humidity</li><li>IR receiver — decodes remote commands (NEC-style)</li><li>Vibration sensor — detects shocks and rough terrain</li><li>Tilt sensor — detects abnormal orientation</li></ol><h3>Working principle</h3><p>Controls change the simulation state (object position, environment, button presses, events, orientation). Sensor models read that state, and the robot's decision logic reacts to the readings.</p></div></div>
+</section>
+
+<section id="us"><h2>2 · Ultrasonic Sensor — HC-SR04</h2><p class="sub">Drag the object or use the slider. Distance = echo time × 0.0343 cm/µs ÷ 2, computed from the object position (simulated).</p>
+<div class="g g2"><div class="card"><canvas id="usC" width="700" height="200"></canvas><label>Object distance (cm)</label><input type="range" id="usS" min="2" max="400" value="59"><canvas id="usG" width="700" height="110" style="margin-top:10px"></canvas></div>
+<div class="card"><div class="big" id="usV"></div><p id="usT"></p><span class="bd ok" id="usSt"></span><label>Detection range threshold (cm)</label><input type="number" id="usR" value="200" min="5" max="400"><p><button class="b s" id="usRst">Reset</button></p><small>HC-SR04 range: 2–400 cm. Graph shows distance history.</small></div></div></section>
+
+<section id="dht"><h2>3 · Temperature &amp; Humidity — DHT11</h2><p class="sub">Simulated readings. Real DHT11: 0–50 °C (±2 °C), 20–90 % RH (±5 %), about 1 sample per second.</p>
+<div class="g g2"><div class="card"><svg viewBox="0 0 160 90" width="160"><rect x="40" y="5" width="80" height="60" rx="6" fill="#38bdf8"/><g fill="#0c4a6e"><rect x="52" y="15" width="56" height="4"/><rect x="52" y="25" width="56" height="4"/><rect x="52" y="35" width="56" height="4"/><rect x="52" y="45" width="56" height="4"/></g><g fill="#cbd5e1"><rect x="55" y="65" width="4" height="20"/><rect x="70" y="65" width="4" height="20"/><rect x="85" y="65" width="4" height="20"/><rect x="100" y="65" width="4" height="20"/></g></svg>
+<label>Temperature (°C)</label><input type="range" id="dT" min="0" max="50" value="28"><label>Humidity (%)</label><input type="range" id="dH" min="20" max="90" value="65"><p><button class="b s" id="dRst">Reset</button></p></div>
+<div class="card"><div class="big" id="dV"></div><span class="bd ok" id="dS"></span><label>Temperature graph (°C)</label><canvas id="dTG" width="600" height="100"></canvas><label>Humidity graph (%)</label><canvas id="dHG" width="600" height="100"></canvas></div></div></section>
+
+<section id="ir"><h2>4 · IR Receiver</h2><p class="sub">Each button generates its own NEC-style frame (address 0x00FF, command byte + inverse). Simulated.</p>
+<div class="g g2"><div class="card"><div class="rem" id="rem4"></div></div>
+<div class="card"><p>IR Signal: <b id="irS"></b></p><div class="big" id="irC"></div><p>Code: <span id="irX"></span></p><p>Receiver Status: <span class="bd ok" id="irR"></span> <i class="led" id="irL"></i></p><button class="b s" id="irClr">Clear / reset</button><h3>Command history</h3><div class="log" id="irH"></div></div></div></section>
+
+<section id="vib"><h2>5 · Vibration Sensor</h2><p class="sub">Trigger a vibration event at a chosen intensity. Detection holds for about 1.2 s. Simulated.</p>
+<div class="g g2"><div class="card"><svg id="vS" viewBox="0 0 160 110" width="170"><rect x="55" y="10" width="50" height="75" rx="8" fill="#334155" stroke="#94a3b8"/><path d="M80 18l-14 8 28 8-28 8 28 8-14 8" stroke="#facc15" stroke-width="3" fill="none"/><circle cx="80" cy="76" r="6" fill="#facc15"/><g fill="#cbd5e1"><rect x="68" y="85" width="4" height="20"/><rect x="88" y="85" width="4" height="20"/></g></svg>
+<p><button class="b" onclick="vibTrig(vb,1)">Low</button> <button class="b" onclick="vibTrig(vb,2)">Medium</button> <button class="b d" onclick="vibTrig(vb,3)">High</button> <button class="b s" id="vRst">Reset</button></p><canvas id="vG" width="600" height="110"></canvas></div>
+<div class="card"><p>Vibration Status: <span class="bd ok" id="vSt"></span></p><p>Intensity: <b id="vI"></b></p><div class="big">Events: <span id="vN">0</span></div></div></div></section>
+
+<section id="tilt"><h2>6 · Tilt Sensor</h2><p class="sub">A ball switch closes when orientation exceeds the threshold. Simulated.</p>
+<div class="g g2"><div class="card"><canvas id="tC" width="400" height="240"></canvas><label>Orientation angle (°)</label><input type="range" id="tA" min="-60" max="60" value="0"><p><button class="b s" onclick="tA.value=0">Normal</button> <button class="b s" onclick="tA.value=-40">Tilt left</button> <button class="b s" onclick="tA.value=40">Tilt right</button> <button class="b s" id="tRst">Reset</button></p></div>
+<div class="card"><div class="big" id="tV"></div><span class="bd ok" id="tS"></span><label>Tilt threshold (±°)</label><input type="number" id="tT" value="30" min="5" max="60"><p>Visual indicator: <i class="dot" id="tD"></i></p></div></div></section>
+
+<section id="sim"><h2>7 · Integrated Smart Robot Car</h2><p class="sub">Drag boxes to change ultrasonic distance. Keys: arrows/WASD, Space = stop. Robot commands arrive via the simulated IR remote.</p>
+<div class="g" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"><div class="card" style="grid-column:span 2;min-width:0"><canvas id="sc" width="900" height="520" style="cursor:grab"></canvas></div>
+<div class="card"><button class="b" id="bS">▶ Start</button> <button class="b s" id="bP">⏸ Pause</button> <button class="b s" id="bR">Reset all</button> <button class="b d" id="bE">Emergency stop</button>
+<h3>IR remote</h3><div class="rem" id="rem7"></div><label><input type="checkbox" id="auto"> Autonomous obstacle avoidance</label>
+<label>Warning distance (cm) — brake at half</label><input type="range" id="wr" min="30" max="150" value="60"><label>Tilt threshold (°)</label><input type="range" id="tt" min="5" max="30" value="15"><label>Simulation speed</label><input type="range" id="spd" min=".5" max="2" step=".1" value="1">
+<label>Ambient temperature (°C)</label><input type="range" id="eT" min="0" max="50" value="28"><label>Ambient humidity (%)</label><input type="range" id="eH" min="20" max="90" value="65"><p>Mode: <b id="md"></b><br>Speed: <b id="sp"></b></p></div></div>
+<h3>Live sensor monitoring</h3><div class="g g5" id="cards"></div>
+<div class="g g2" style="margin-top:14px"><div class="card"><h3 style="margin-top:0">Live graph <small style="color:#38bdf8">distance</small> <small style="color:#facc15">vibration</small> <small style="color:#a78bfa">tilt</small></h3><canvas id="gL" width="600" height="140"></canvas></div>
+<div class="card"><h3 style="margin-top:0">Event history <button class="b s" id="evC" style="padding:3px 10px">Clear</button></h3><div class="log" id="evl"></div></div></div>
+<div class="g g2" style="margin-top:14px"><div class="card"><h3 style="margin-top:0">System architecture</h3><div class="arch"><span>5 Sensors</span>→<span>Simulation state</span>→<span>Decision logic</span>→<span>Motors · Events · Dashboard</span></div><h3>How the sensors work together</h3><ul><li>Ultrasonic ray-cast from the robot's heading gives distance; the robot brakes (or turns in auto mode).</li><li>IR commands set motion; DHT11 follows the ambient controls.</li><li>Rough road and impacts trigger the vibration sensor; the ramp changes pitch for the tilt sensor.</li></ul></div>
+<div class="card"><h3 style="margin-top:0">Testing checklist</h3><ul style="list-style:none;padding:0"><li><label><input type="checkbox"> Ultrasonic distance changes when the object moves</label></li><li><label><input type="checkbox"> DHT11 values follow the sliders</label></li><li><label><input type="checkbox"> Each remote button shows a different code</label></li><li><label><input type="checkbox"> Vibration counter increments</label></li><li><label><input type="checkbox"> Tilt detected beyond threshold</label></li><li><label><input type="checkbox"> Robot brakes before obstacles and walls</label></li><li><label><input type="checkbox"> Rough road logs vibration, ramp logs tilt</label></li><li><label><input type="checkbox"> Reset restores everything</label></li></ul></div></div></section>
+</main>
+<script>
+const $=i=>document.getElementById(i),tx=(i,t)=>{$(i).textContent=t},HN=120,hist=v=>Array(HN).fill(v),push=(a,v)=>{a.push(v);a.shift()},now=()=>performance.now(),ts=()=>new Date().toLocaleTimeString(),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const T=['Introduction','Ultrasonic · HC-SR04','DHT11 Temp & Humidity','IR Receiver','Vibration Sensor','Tilt Sensor','Integrated Robot Car'],P=['intro','us','dht','ir','vib','tilt','sim'];let cur='intro';
+function show(p){if(!P.includes(p))p='intro';cur=p;P.forEach(k=>$(k).classList.toggle('on',k==p));[...$('nav').children].forEach((b,i)=>b.classList.toggle('on',P[i]==p));if(location.hash!='#'+p)location.hash=p;scrollTo(0,0)}
+P.forEach((p,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+T[i];b.onclick=()=>show(p);$('nav').append(b)});
+addEventListener('hashchange',()=>show(location.hash.slice(1)));
+function setS(i,t,c){const e=$(i);if(t!==null)e.textContent=t;e.className=e.className.replace(/\b(ok|wn|rd|xx)\b/g,'').trim()+' '+c}
+function graph(c,arrs,cols,mn,mx){const g=c.getContext('2d'),w=c.width,h=c.height;g.clearRect(0,0,w,h);g.strokeStyle='#24334f';g.lineWidth=1;for(let i=1;i<4;i++){g.beginPath();g.moveTo(0,h*i/4);g.lineTo(w,h*i/4);g.stroke()}arrs.forEach((a,k)=>{g.strokeStyle=cols[k];g.lineWidth=2;g.beginPath();a.forEach((v,i)=>{const x=i/(HN-1)*w,y=h-(v-mn)/(mx-mn)*h*.9-h*.05;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()})}
+/* IR */
+const IRC={FORWARD:'18',BACKWARD:'4A',LEFT:'10',RIGHT:'5A',STOP:'38',POWER:'45'},mkIR=()=>({cmd:'—',code:'—',t:-1e9,on:true,h:[]}),ir4=mkIR(),ir=mkIR();
+function irSend(o,c,cb){if(!o.on&&c!='POWER'){o.h.unshift(ts()+' ✖ '+c+' ignored (standby)');o.h.length=Math.min(o.h.length,12);return}
+if(c=='POWER')o.on=!o.on;const k=IRC[c],inv=(255^parseInt(k,16)).toString(16).padStart(2,'0').toUpperCase();o.cmd=c;o.code='0x00FF'+k+inv;o.t=now();o.h.unshift(ts()+' → '+c+'  '+o.code);o.h.length=Math.min(o.h.length,12);cb&&cb(c)}
+function mkRemote(el,fn){[['POWER','⏻'],['FORWARD','▲'],0,['LEFT','◀'],['STOP','■'],['RIGHT','▶'],0,['BACKWARD','▼'],0].forEach(x=>{if(!x){el.append(document.createElement('span'));return}const b=document.createElement('button');b.className='b s';b.innerHTML=x[1]+'<br><small>'+x[0]+'</small>';b.onclick=()=>fn(x[0]);el.append(b)})}
+const irRender=()=>{$('irH').innerHTML=ir4.h.map(x=>'<div>'+x+'</div>').join('')||'—'};
+mkRemote($('rem4'),c=>{irSend(ir4,c);irRender()});$('irClr').onclick=()=>{Object.assign(ir4,mkIR());irRender()};irRender();
+function irTick(n){const rx=n-ir4.t<1500;tx('irS',rx?'Received':'No signal');tx('irC',rx?ir4.cmd:'—');tx('irX',rx?ir4.code:'—');$('irL').classList.toggle('on',rx);setS('irR',ir4.on?'Active':'Standby',ir4.on?'ok':'xx')}
+/* Ultrasonic */
+const usC=$('usC'),us={ox:70+59*1.5,pd:false},usH=hist(59),usD=()=>clamp((us.ox-70)/1.5,2,400);
+function usSet(d){d=clamp(d,2,400);us.ox=70+d*1.5;$('usS').value=Math.round(d)}
+function usDrag(e){const r=usC.getBoundingClientRect();usSet(((e.clientX-r.left)*usC.width/r.width-70)/1.5)}
+$('usS').oninput=e=>usSet(+e.target.value);usC.onpointerdown=e=>{us.pd=true;usC.setPointerCapture(e.pointerId);usDrag(e)};usC.onpointermove=e=>us.pd&&usDrag(e);usC.onpointerup=()=>us.pd=false;
+$('usRst').onclick=()=>{usSet(59);$('usR').value=200};
+function usTick(smp){const d=usD(),det=d<=+$('usR').value;if(smp)push(usH,d);tx('usV',d.toFixed(0)+' cm');tx('usT','Echo pulse: '+(2*d/0.0343).toFixed(0)+' µs');setS('usSt',det?'Object detected':'No object detected (outside range)',det?'rd':'ok');
+if(cur!='us')return;const g=usC.getContext('2d');g.clearRect(0,0,700,200);g.fillStyle='#1e3a8a';g.fillRect(14,60,44,80);g.fillStyle='#e2e8f0';[80,120].forEach(y=>{g.beginPath();g.arc(36,y,13,0,7);g.fill()});g.fillStyle='#94a3b8';g.font='11px sans-serif';g.fillText('HC-SR04',10,155);
+if(det){g.strokeStyle='#3b82f6';for(let r=40;r<us.ox-60;r+=36){g.globalAlpha=1-r/(us.ox);g.beginPath();g.arc(58,100,r,-.5,.5);g.stroke()}g.globalAlpha=1}
+g.fillStyle=det?'#ef4444':'#64748b';g.fillRect(us.ox,60,22,80);g.fillStyle='#e6edf7';g.fillText(d.toFixed(0)+' cm',us.ox-10,52);graph($('usG'),[usH],['#38bdf8'],0,400)}
+/* DHT */
+const dTh=hist(28),dHh=hist(65);let dc=0;
+$('dRst').onclick=()=>{$('dT').value=28;$('dH').value=65};
+function dhtTick(smp){const t=+$('dT').value,h=+$('dH').value;if(smp&&++dc>=5){dc=0;push(dTh,t);push(dHh,h)}tx('dV',t+'°C · '+h+'%');
+let s=['Comfortable','ok'];if(t>=40)s=['Overheat — critical','rd'];else if(t>=32)s=['Hot','wn'];else if(t<=15)s=['Cold','wn'];else if(h>=80)s=['Very humid','wn'];else if(h<=30)s=['Dry air','wn'];setS('dS',s[0],s[1]);
+if(cur=='dht'){graph($('dTG'),[dTh],['#f97316'],0,50);graph($('dHG'),[dHh],['#38bdf8'],20,90)}}
+/* Vibration */
+const VN=['None','Low','Medium','High'],vb={lvl:0,t:-1e9,n:0,act:0},vH=hist(0);
+function vibTrig(o,l){o.lvl=l;o.t=now();o.n++;o.act=Math.max(o.act,[0,.35,.65,1][l])}
+const vibDet=o=>now()-o.t<1200;
+$('vRst').onclick=()=>{Object.assign(vb,{lvl:0,t:-1e9,n:0,act:0});vH.fill(0)};
+function vibTick(smp,dt){vb.act=Math.max(0,vb.act-dt*1.2);if(smp)push(vH,vb.act);const d=vibDet(vb);setS('vSt',d?'Detected':'No vibration',d?'rd':'ok');tx('vI',d?VN[vb.lvl]:'None');tx('vN',vb.n);$('vS').classList.toggle('shake',d);if(cur=='vib')graph($('vG'),[vH],['#facc15'],0,1)}
+/* Tilt */
+function tiltTick(){const a=+$('tA').value,th=+$('tT').value,det=Math.abs(a)>=th;tx('tV',a+'°');setS('tS',det?'Tilt Detected':'Normal',det?'rd':'ok');setS('tD','',det?'rd':'ok');if(cur!='tilt')return;
+const g=$('tC').getContext('2d');g.clearRect(0,0,400,240);g.strokeStyle='#475569';g.beginPath();g.moveTo(0,200);g.lineTo(400,200);g.stroke();g.save();g.translate(200,150);g.rotate(a*Math.PI/180);g.fillStyle='#2563eb';g.beginPath();g.roundRect(-80,-25,160,45,8);g.fill();g.fillStyle='#0f172a';[-50,50].forEach(x=>{g.beginPath();g.arc(x,22,17,0,7);g.fill()});
+g.fillStyle='#1e293b';g.fillRect(-24,-20,48,14);g.fillStyle=det?'#ef4444':'#22c55e';g.beginPath();g.arc(det?Math.sign(a)*17:0,-13,5,0,7);g.fill();g.restore();g.fillStyle='#cbd5e1';g.font='12px sans-serif';g.fillText('Ball switch inside body',130,225)}
+$('tRst').onclick=()=>{$('tA').value=0;$('tT').value=30};
+/* Integrated simulation */
+const cv=$('sc'),cx=cv.getContext('2d'),W=900,H=520,CM=.5,RR=24,ROUGH={x:330,y:370,w:210,h:120},RAMP={x:620,y:50,w:210,h:130};
+const B0=[{x:250,y:120,w:60,h:60},{x:470,y:230,w:70,h:50},{x:700,y:300,w:60,h:90},{x:130,y:270,w:50,h:50}];let bx=B0.map(b=>({...b}));
+const S0=()=>({x:90,y:440,a:0,v:0,turn:0,turnT:0,tilt:0,cmd:'STOP',run:false,es:false,auto:false,blk:false,dist:null,imp:0,vr:0}),vbs={lvl:0,t:-1e9,n:0,act:0};let s=S0(),evs=[],lastEv={},fl={},evDirty=true,vlog=0,gd=hist(1),gv=hist(0),gt=hist(0);
+const pin=(r,x,y)=>x>r.x&&x<r.x+r.w&&y>r.y&&y<r.y+r.h,hitB=(x,y,b)=>{const a=clamp(x,b.x,b.x+b.w),c=clamp(y,b.y,b.y+b.h);return(x-a)**2+(y-c)**2<RR*RR},col=(x,y)=>x<RR+8||x>W-RR-8||y<RR+8||y>H-RR-8||bx.some(b=>hitB(x,y,b));
+function ev(sn,m,l){evs.unshift({t:ts(),sn,m,l});evs.length=Math.min(evs.length,40);lastEv[sn]=m;evDirty=true}
+function edge(k,c,sn,m,l){if(c&&!fl[k])ev(sn,m,l);fl[k]=c}
+function vibS(l,m){const n=now();vibTrig(vbs,l);if(n-vlog>1200||m.startsWith('Impact')){ev('VIB',m+' — '+VN[l],'rd');vlog=n}}
+function ray(){for(let k=26;k<=586;k+=2){const px=s.x+Math.cos(s.a)*k,py=s.y+Math.sin(s.a)*k;if(px<8||px>W-8||py<8||py>H-8||bx.some(b=>px>b.x&&px<b.x+b.w&&py>b.y&&py<b.y+b.h))return(k-26)*CM}return null}
+function onIR(c){if(c=='POWER'){if(!ir.on){s.cmd='STOP';s.auto=false;$('auto').checked=false}ev('IR','POWER → receiver '+(ir.on?'active':'standby'),'xx');return}
+if(c=='LEFT'||c=='RIGHT'){s.turn=c=='LEFT'?-1:1;s.turnT=.35}else{s.cmd=c;s.auto=false;$('auto').checked=false}ev('IR',c+' received','ok')}
+const simCmd=c=>irSend(ir,c,onIR);mkRemote($('rem7'),simCmd);
+const KM={ArrowUp:'FORWARD',w:'FORWARD',ArrowDown:'BACKWARD',s:'BACKWARD',ArrowLeft:'LEFT',a:'LEFT',ArrowRight:'RIGHT',d:'RIGHT',' ':'STOP'};
+addEventListener('keydown',e=>{if(cur!='sim'||/INPUT|TEXTAREA/.test(e.target.tagName))return;const c=KM[e.key.length==1?e.key.toLowerCase():e.key];if(c){e.preventDefault();simCmd(c)}});
+$('auto').onchange=e=>{s.auto=e.target.checked;if(s.auto){s.cmd='FORWARD';ev('IR','Autonomous mode ON','ok')}};
+$('bS').onclick=()=>{s.run=true;if(s.es){s.es=false;tx('bE','Emergency stop')}};$('bP').onclick=()=>{s.run=false};
+$('bE').onclick=()=>{s.es=!s.es;if(s.es){s.cmd='STOP';s.auto=false;$('auto').checked=false;ev('SYS','EMERGENCY STOP','rd')}else ev('SYS','E-stop released','ok');tx('bE',s.es?'Release E-stop':'Emergency stop')};
+$('evC').onclick=()=>{evs=[];evDirty=true};
+$('bR').onclick=()=>{s=S0();bx=B0.map(b=>({...b}));Object.assign(vbs,{lvl:0,t:-1e9,n:0,act:0});Object.assign(ir,mkIR());evs=[];lastEv={};fl={};evDirty=true;gd.fill(1);gv.fill(0);gt.fill(0);$('auto').checked=false;$('eT').value=28;$('eH').value=65;tx('bE','Emergency stop')};
+let drag=null;const pp=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]};
+cv.onpointerdown=e=>{const[x,y]=pp(e);const b=[...bx].reverse().find(b=>pin(b,x,y));if(b){drag={b,dx:x-b.x,dy:y-b.y};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'}};
+cv.onpointermove=e=>{if(!drag)return;const[x,y]=pp(e),b=drag.b,n={x:clamp(x-drag.dx,12,W-12-b.w),y:clamp(y-drag.dy,12,H-12-b.h),w:b.w,h:b.h};if(!hitB(s.x,s.y,{...n,x:n.x-4,y:n.y-4,w:n.w+8,h:n.h+8})){b.x=n.x;b.y=n.y}};
+cv.onpointerup=()=>{drag=null;cv.style.cursor='grab'};
+const CN=['ULTRASONIC','DHT11','IR RECEIVER','VIBRATION','TILT'],CK=['US','DHT','IR','VIB','TILT'];
+$('cards').innerHTML=CN.map((n,i)=>`<div class="card"><b>${n}</b> <i class="dot" id="c${i}d"></i><div id="c${i}r" style="margin:6px 0;min-height:44px"></div><span class="bd xx" id="c${i}s"></span><br><small id="c${i}e"></small></div>`).join('');
+const card=(i,r,st,c)=>{$('c'+i+'r').innerHTML=r;setS('c'+i+'s',st,c);setS('c'+i+'d','',c);tx('c'+i+'e','Last: '+(lastEv[CK[i]]||'—'))};
+function simTick(dt,n,smp){const rdt=dt;dt*=+$('spd').value;s.dist=ray();const d=s.dist,warn=+$('wr').value,stp=warn/2,thr=+$('tt').value;s.blk=false;let v=0;
+if(s.run&&!s.es&&ir.on){v=s.auto?100:s.cmd=='FORWARD'?110:s.cmd=='BACKWARD'?-80:0;
+if(v>0&&d!=null&&d<=stp){v=0;s.blk=true;if(s.auto){s.turn=1;s.turnT=.15}}
+if(s.turnT>0){s.a+=s.turn*2.2*dt;s.turnT-=dt}
+if(v){const nx=s.x+Math.cos(s.a)*v*dt,ny=s.y+Math.sin(s.a)*v*dt;if(col(nx,ny)){if(n-s.imp>800){s.imp=n;vibS(3,'Impact detected')}s.cmd='STOP';s.auto=false;$('auto').checked=false;v=0}else{s.x=nx;s.y=ny}}}
+s.v=v;if(pin(ROUGH,s.x,s.y)&&Math.abs(v)>5&&n-s.vr>300){s.vr=n;vibS(Math.abs(v)>90?2:1,'Rough road vibration')}
+const tg=pin(RAMP,s.x,s.y)?22*Math.cos(s.a):0;s.tilt+=(tg-s.tilt)*Math.min(1,dt*4);vbs.act=Math.max(0,vbs.act-rdt*1.2);
+const td=Math.abs(s.tilt)>=thr,tp=+$('eT').value,hm=+$('eH').value;
+edge('t',td,'TILT','Tilt detected ('+s.tilt.toFixed(0)+'°)','rd');edge('o',d!=null&&d<=warn,'US','Obstacle at '+(d==null?'?':d.toFixed(0))+' cm','wn');edge('h',tp>=40,'DHT','Overheat '+tp+'°C','rd');
+if(smp){push(gd,d==null?1:d/280);push(gv,vbs.act);push(gt,Math.min(1,Math.abs(s.tilt)/30))}
+if(cur!='sim')return;
+card(0,'<span class="big">'+(d==null?'&gt; 280':Math.max(2,d).toFixed(0))+' cm</span>',s.blk?'AVOID: braking':d==null?'No object detected':d<=stp?'Too close':d<=warn?'Warning: obstacle ahead':'Object detected',s.blk||(d!=null&&d<=stp)?'rd':d!=null&&d<=warn?'wn':'ok');
+card(1,'<span class="big">'+tp+'°C · '+hm+'%</span>',tp>=40?'Overheat':tp>=32?'Hot':'Monitoring',tp>=40?'rd':tp>=32?'wn':'ok');
+const rx=n-ir.t<1500;card(2,'<span class="big">'+(rx?ir.cmd:'—')+'</span><br><small>'+ir.code+'</small>',rx?'Signal received':ir.on?'Waiting':'Standby',rx?'ok':'xx');
+const vd=vibDet(vbs);card(3,'Intensity: <b>'+(vd?VN[vbs.lvl]:'Low')+'</b><br>Events: '+vbs.n,vd?'Vibration detected':'No vibration',vd?'rd':'ok');
+card(4,'<span class="big">'+s.tilt.toFixed(0)+'°</span>',td?'Tilt detected':'Normal position',td?'rd':'ok');
+tx('md',s.es?'EMERGENCY STOP':!s.run?'Paused':!ir.on?'IR standby':s.auto?'Autonomous':'Manual (IR)');tx('sp',(Math.abs(s.v)*CM).toFixed(0)+' cm/s');
+if(evDirty){$('evl').innerHTML=evs.map(e=>`<div><i class="dot ${e.l}"></i> ${e.t} <b>${e.sn}</b> ${e.m}</div>`).join('')||'No events yet';evDirty=false}
+graph($('gL'),[gd,gv,gt],['#38bdf8','#facc15','#a78bfa'],0,1);draw(d,warn,stp)}
+function draw(d,warn,stp){const c=cx;c.clearRect(0,0,W,H);c.fillStyle='#0d1627';c.fillRect(0,0,W,H);c.strokeStyle='#13213a';c.lineWidth=1;for(let i=0;i<W;i+=50){c.beginPath();c.moveTo(i,0);c.lineTo(i,H);c.stroke()}for(let i=0;i<H;i+=50){c.beginPath();c.moveTo(0,i);c.lineTo(W,i);c.stroke()}
+c.fillStyle='#3b2f1d';c.fillRect(ROUGH.x,ROUGH.y,ROUGH.w,ROUGH.h);c.strokeStyle='#a16207';for(let i=-ROUGH.h;i<ROUGH.w;i+=14){c.beginPath();c.moveTo(ROUGH.x+i,ROUGH.y+ROUGH.h);c.lineTo(ROUGH.x+i+ROUGH.h,ROUGH.y);c.stroke()}
+const gr=c.createLinearGradient(RAMP.x,0,RAMP.x+RAMP.w,0);gr.addColorStop(0,'#1e3a5f');gr.addColorStop(1,'#3b82f6');c.fillStyle=gr;c.fillRect(RAMP.x,RAMP.y,RAMP.w,RAMP.h);c.fillStyle='#fff';c.font='bold 12px sans-serif';c.fillText('ROUGH ROAD',ROUGH.x+8,ROUGH.y+16);c.fillText('RAMP (22° uphill →)',RAMP.x+8,RAMP.y+16);
+c.strokeStyle='#475569';c.lineWidth=8;c.strokeRect(4,4,W-8,H-8);
+bx.forEach(b=>{c.fillStyle='#92602b';c.fillRect(b.x,b.y,b.w,b.h);c.strokeStyle='#d4a05a';c.lineWidth=2;c.strokeRect(b.x,b.y,b.w,b.h);c.beginPath();c.moveTo(b.x,b.y);c.lineTo(b.x+b.w,b.y+b.h);c.moveTo(b.x+b.w,b.y);c.lineTo(b.x,b.y+b.h);c.stroke()});
+const L=d==null?560:d/CM,col2=d!=null&&d<=stp?'239,68,68':d!=null&&d<=warn?'234,179,8':'34,197,94',sx=s.x+Math.cos(s.a)*26,sy=s.y+Math.sin(s.a)*26;
+c.fillStyle='rgba('+col2+',.15)';c.beginPath();c.moveTo(sx,sy);c.arc(sx,sy,L,s.a-.26,s.a+.26);c.closePath();c.fill();c.strokeStyle='rgba('+col2+',.8)';c.lineWidth=1;c.beginPath();c.moveTo(sx,sy);c.lineTo(sx+Math.cos(s.a)*L,sy+Math.sin(s.a)*L);c.stroke();
+c.save();c.translate(s.x,s.y);c.rotate(s.a);const bg=c.createLinearGradient(0,-17,0,17);bg.addColorStop(0,'#3b82f6');bg.addColorStop(1,'#1e3a8a');c.fillStyle=bg;c.strokeStyle='#93c5fd';c.lineWidth=1.5;c.beginPath();c.roundRect(-26,-17,52,34,6);c.fill();c.stroke();
+c.fillStyle='#0f172a';[[-20,-23],[8,-23],[-20,17],[8,17]].forEach(w=>c.fillRect(w[0],w[1],14,6));c.fillStyle='rgba(14,165,233,.6)';c.fillRect(6,-10,10,20);
+c.fillStyle='#e2e8f0';[-8,8].forEach(y=>{c.beginPath();c.arc(26,y,5,0,7);c.fill()});c.fillStyle='#f87171';c.beginPath();c.arc(20,0,3,0,7);c.fill();c.fillStyle='#38bdf8';c.fillRect(-12,-12,8,8);c.fillStyle='#facc15';c.fillRect(-12,4,7,7);c.fillStyle='#a78bfa';c.beginPath();c.arc(-19,0,4,0,7);c.fill();c.restore();
+c.font='11px sans-serif';c.fillStyle='#cbd5e1';c.strokeStyle='#64748b';[['Ultrasonic HC-SR04',26,0,70,-52],['IR receiver',20,0,70,52],['DHT11',-8,-8,-70,-52],['Vibration',-8,8,-70,52],['Tilt',-19,0,-5,72]].forEach(l=>{const ca=Math.cos(s.a),sa=Math.sin(s.a),wx=s.x+l[1]*ca-l[2]*sa,wy=s.y+l[1]*sa+l[2]*ca,lx=wx+l[3],ly=wy+l[4];c.beginPath();c.moveTo(wx,wy);c.lineTo(lx,ly);c.stroke();c.textAlign=l[3]>0?'left':l[3]<0?'right':'center';c.fillText(l[0],lx+(l[3]>0?3:l[3]<0?-3:0),ly+4)});
+c.textAlign='center';c.font='bold 18px sans-serif';if(s.es){c.fillStyle='#ef4444';c.fillText('EMERGENCY STOP',W/2,40)}else if(!s.run){c.fillStyle='#eab308';c.fillText('⏸ Paused — press Start',W/2,40)}c.textAlign='left'}
+/* loop */
+let last=now(),acc=0;
+function tick(dt){const n=now();acc+=dt;let smp=false;if(acc>=.1){acc=0;smp=true}usTick(smp);dhtTick(smp);irTick(n);vibTick(smp,dt);tiltTick();simTick(dt,n,smp)}
+function loop(t){const dt=Math.min(.05,Math.max(0,(t-last)/1000));last=t;try{tick(dt)}catch(e){console.error(e)}requestAnimationFrame(loop)}
+show(location.hash.slice(1));requestAnimationFrame(loop);
+</script></body></html>
